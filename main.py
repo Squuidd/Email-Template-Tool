@@ -5,6 +5,9 @@ import os
 import pyperclip
 
 
+select_events = []
+edit_events = []
+
 def templates_path():
     absolute_path = os.path.dirname(__file__)
     relative_path = "Templates/"
@@ -24,10 +27,26 @@ class Template:
         open(file, "x")
 
         self.path = file
+        self.save()
 
-  
+    def save(self):
+        with open("config.json", 'r') as f:
+            data = json.load(f)
+        data["Templates"].append([self.name, self.path])
 
-window = wd.main()
+        with open("config.json", "w") as f:
+            json.dump(data, f)
+
+def load_templates():
+    with open("config.json", 'r') as f:
+        data = json.load(f)
+
+    for i in data["Templates"]:
+        select_events.append(i[0])
+        edit_events.append(i[0])  
+        print(i)
+
+    return data["Templates"]
 
 def create_template(name):
     window.extend_layout(window['new_column'], wd.template_button(template_name))
@@ -36,14 +55,17 @@ def create_template(name):
     template.create_txt()
     
 
-
 # scan for templates
 
-select_events = []
-edit_events = []
+
+ 
+
+window = wd.main(load_templates())
+populated = False
 
 while True:
     event, values = window.read()
+    
 
     if event == sg.WIN_CLOSED:
         break
@@ -52,8 +74,8 @@ while True:
         template_name = wd.name_input()
         create_template(template_name)
 
-        select_events.append(f"{template_name}")
-        edit_events.append(f"{template_name}")
+        select_events.append(template_name)
+        edit_events.append(template_name)
 
     for e in edit_events:
         if event == f"{e}_edit":
@@ -65,8 +87,6 @@ while True:
             path = f"{templates_path()}/{e}.txt"
             file = open(path, 'r').read()
             pyperclip.copy(file)
-
-
 
 window.close()
 

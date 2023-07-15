@@ -1,12 +1,17 @@
 import PySimpleGUI as sg
-
+import json
 
 
 WINDOW_NAME = "Email Template Tool"
 font = ("Arial", 14)
 
-def main():
+def main(saved_templates):
     column_layout = []
+
+    # displays saved templates
+    for i in saved_templates:
+        column_layout.append(template_button(i[0])[0])
+        print(i[0])
 
     layout = [
         [
@@ -16,7 +21,7 @@ def main():
             sg.Column(column_layout, key="new_column") 
         ]
     ]
-    
+
     return sg.Window(WINDOW_NAME, layout)
 
 def name_input():
