@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
 
+
+
 WINDOW_NAME = "Email Template Tool"
 font = ("Arial", 14)
 
@@ -46,5 +48,13 @@ def name_input():
     window.close()
 
 def template_button(name):
-    return [[sg.Button(name, key=f"{name}_select", font=font)]]
+    layout = [
+        [
+            sg.Button(name, key=f"{name}_select", font=font),
+            sg.Button("Edit Template", key=f"{name}_edit", font=font)
+        ]
+    ]
+
+    return layout
+    
     
