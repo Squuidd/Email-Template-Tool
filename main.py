@@ -101,7 +101,13 @@ while True:
             path = f"{templates_path()}/{e}.txt"
             os.startfile(path)
         elif event == f"{e}_delete":
-            delete_template(e)
+            try:
+                delete_template(e)
+            except:
+                pass
+            window.close()
+            window = wd.main(load_templates())
+            
 
     for e in select_events:
         if event == f"{e}_select":
