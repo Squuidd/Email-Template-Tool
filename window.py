@@ -46,5 +46,5 @@ def name_input():
     window.close()
 
 def template_button(name):
-    return sg.Button(name, key=f"{name}_select", font=font)
+    return [[sg.Button(name, key=f"{name}_select", font=font)]]
     

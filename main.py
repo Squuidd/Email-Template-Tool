@@ -30,7 +30,7 @@ while True:
     elif event == "add_template":
         template_name = wd.name_input()
         print(window)
-        #window.extend_layout(window['new_column'], wd.template_button(template_name))
+        window.extend_layout(window['new_column'], wd.template_button(template_name))
 
 
 
