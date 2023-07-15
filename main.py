@@ -48,6 +48,25 @@ def load_templates():
 
     return data["Templates"]
 
+def delete_template(name):
+
+    # Delete reference in config.json
+    with open("config.json", 'r') as f:
+        data = json.load(f)
+    
+    for i in data["Templates"]:
+        if i[0] == name:
+            data["Templates"].remove(i)
+    
+    with open("config.json", 'w') as f:
+        json.dump(data, f)
+
+    # Delete txt file
+    path = templates_path()
+    file = f"{path}/{name}.txt"
+    os.remove(file)
+
+
 def create_template(name):
     window.extend_layout(window['new_column'], wd.template_button(template_name))
 
@@ -81,12 +100,16 @@ while True:
         if event == f"{e}_edit":
             path = f"{templates_path()}/{e}.txt"
             os.startfile(path)
+        elif event == f"{e}_delete":
+            delete_template(e)
 
     for e in select_events:
         if event == f"{e}_select":
             path = f"{templates_path()}/{e}.txt"
             file = open(path, 'r').read()
             pyperclip.copy(file)
+
+    
 
 window.close()
 

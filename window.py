@@ -56,7 +56,8 @@ def template_button(name):
     layout = [
         [
             sg.Button(name, key=f"{name}_select", font=font),
-            sg.Button("Edit Template", key=f"{name}_edit", font=font)
+            sg.Button("Edit Template", key=f"{name}_edit", font=font),
+            sg.Button("Delete Template", key=f"{name}_delete", font=font)
         ]
     ]
 
