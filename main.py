@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import json
 import window as wd
 import os
+import pyperclip
 
 
 def templates_path():
@@ -58,6 +59,13 @@ while True:
         if event == f"{e}_edit":
             path = f"{templates_path()}/{e}.txt"
             os.startfile(path)
+
+    for e in select_events:
+        if event == f"{e}_select":
+            path = f"{templates_path()}/{e}.txt"
+            file = open(path, 'r').read()
+            pyperclip.copy(file)
+
 
 
 window.close()
