@@ -59,7 +59,9 @@ def name_input():
 
         if event == "template_name":
             window.close()
-            return name_field[0][0].get()
+            name = name_field[0][0].get()
+
+            return name
 
         if event == sg.WIN_CLOSED:
             break
@@ -89,7 +91,7 @@ def confirm_delete(name):
     ]
 
     
-    window = sg.Window("", layout)
+    window = sg.Window("Caution", layout)
 
     while True:
         event, values = window.read()
@@ -107,4 +109,23 @@ def confirm_delete(name):
     window.close()
     return False
         
-        
+def error_message(message):
+    layout = [
+        [
+            sg.Text(message, font=font)
+        ],
+        [
+            sg.Button("Ok", key="error_acknowledge", font=font)
+        ]
+    ]
+
+    window = sg.Window("Warning", layout=layout)
+
+    while True:
+        event, values = window.read()
+
+        if event == "error_acknowledge":
+            break
+
+    window.close()
+

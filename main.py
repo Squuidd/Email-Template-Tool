@@ -48,6 +48,23 @@ class Template:
         with open(config_file, "w") as f:
             json.dump(data, f)
 
+def name_checker(name):
+    # Checks if name is empty
+    if name == "":
+        wd.error_message("The template must be named.")
+        return False
+    
+    # Checks if name is already being used.
+    with open(config_file, 'r') as f:
+        data = json.load(f)
+    
+    for i in data["Templates"]:
+        if i[0] == name:
+            wd.error_message("This name is already used.")
+            return False
+        
+    return True
+
 def load_templates():
     with open(config_file, 'r') as f:
         data = json.load(f)
@@ -77,7 +94,6 @@ def delete_template(name):
     file = f"{path}/{name}.txt"
     os.remove(file)
 
-
 def create_template(name):
     window.extend_layout(window['new_column'], wd.template_button(template_name))
 
@@ -98,10 +114,12 @@ while True:
 
     elif event == "add_template":
         template_name = wd.name_input()
-        create_template(template_name)
-        template_events.append(template_name)
-        window.close()
-        window = wd.main(load_templates())
+        # name checker
+        if name_checker(template_name):
+            create_template(template_name)
+            template_events.append(template_name)
+            window.close()
+            window = wd.main(load_templates())
 
     for e in template_events:
         if event == f"{e}_edit":
