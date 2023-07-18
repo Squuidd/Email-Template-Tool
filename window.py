@@ -10,7 +10,11 @@ def sort_templates(names):
     for name in names:
         name_list.append(name[0])
 
-    name_list.sort(key=lambda v: v.upper())
+    try: 
+        name_list.sort(key=lambda v: v.upper())
+        # This breaks if there is a None object
+    except:
+        pass
 
     return name_list
 
