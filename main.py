@@ -5,16 +5,23 @@ import os
 import pyperclip
 
 
-select_events = []
-edit_events = []
+# select_events = []
+template_events = []
+
+config_file = "config.json"
+
+if '_MEIPASS2' in os.environ:
+    config_file = os.path.join(os.environ['_MEIPASS2'], config_file)
 
 def templates_path():
     absolute_path = os.path.dirname(__file__)
     relative_path = "Templates/"
     full_path = os.path.join(absolute_path, relative_path)
 
-    return full_path
-
+    if '_MEIPASS2' in os.environ:
+        full_path = os.path.join(os.environ['_MEIPASS2'], full_path)
+    # return full_path
+    return "Templates\\"
 
 class Template:
     def __init__(self, name):
@@ -24,41 +31,45 @@ class Template:
         path = templates_path()
         file = f"{path}/{self.name}.txt"
         
+        if '_MEIPASS2' in os.environ:
+            file = os.path.join(os.environ['_MEIPASS2'], file)
+
         open(file, "x")
 
         self.path = file
         self.save()
 
     def save(self):
-        with open("config.json", 'r') as f:
+        with open(config_file, 'r') as f:
             data = json.load(f)
         data["Templates"].append([self.name, self.path])
 
-        with open("config.json", "w") as f:
+        with open(config_file, "w") as f:
             json.dump(data, f)
 
 def load_templates():
-    with open("config.json", 'r') as f:
+    with open(config_file, 'r') as f:
         data = json.load(f)
 
     for i in data["Templates"]:
-        select_events.append(i[0])
-        edit_events.append(i[0])  
+        # select_events.append(i[0])
+        template_events.append(i[0])  
         print(i)
 
     return data["Templates"]
 
 def delete_template(name):
-
+    
     # Delete reference in config.json
-    with open("config.json", 'r') as f:
+
+    with open(config_file, 'r') as f:
         data = json.load(f)
     
     for i in data["Templates"]:
         if i[0] == name:
             data["Templates"].remove(i)
     
-    with open("config.json", 'w') as f:
+    with open(config_file, 'w') as f:
         json.dump(data, f)
 
     # Delete txt file
@@ -93,13 +104,19 @@ while True:
         template_name = wd.name_input()
         create_template(template_name)
 
-        select_events.append(template_name)
-        edit_events.append(template_name)
+        # select_events.append(template_name)
+        template_events.append(template_name)
 
-    for e in edit_events:
+    for e in template_events:
         if event == f"{e}_edit":
             path = f"{templates_path()}/{e}.txt"
             os.startfile(path)
+        
+        elif event == f"{e}_select":
+            path = f"{templates_path()}/{e}.txt"
+            file = open(path, 'r').read()
+            pyperclip.copy(file)
+
         elif event == f"{e}_delete":
             try:
                 delete_template(e)
@@ -109,11 +126,11 @@ while True:
             window = wd.main(load_templates())
             
 
-    for e in select_events:
-        if event == f"{e}_select":
-            path = f"{templates_path()}/{e}.txt"
-            file = open(path, 'r').read()
-            pyperclip.copy(file)
+    # for e in select_events:
+    #     if event == f"{e}_select":
+    #         path = f"{templates_path()}/{e}.txt"
+    #         file = open(path, 'r').read()
+    #         pyperclip.copy(file)
 
     
 
