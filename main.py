@@ -5,9 +5,10 @@ import os
 import pyperclip
 
 
-# select_events = []
-template_events = []
 
+
+
+template_events = []
 config_file = "config.json"
 
 if '_MEIPASS2' in os.environ:
@@ -52,9 +53,8 @@ def load_templates():
         data = json.load(f)
 
     for i in data["Templates"]:
-        # select_events.append(i[0])
         template_events.append(i[0])  
-        print(i)
+        
 
     return data["Templates"]
 
@@ -83,19 +83,15 @@ def create_template(name):
 
     template = Template(name)
     template.create_txt()
+
     
 
 # scan for templates
 
-
- 
-
 window = wd.main(load_templates())
-populated = False
 
 while True:
     event, values = window.read()
-    
 
     if event == sg.WIN_CLOSED:
         break
@@ -103,9 +99,9 @@ while True:
     elif event == "add_template":
         template_name = wd.name_input()
         create_template(template_name)
-
-        # select_events.append(template_name)
         template_events.append(template_name)
+        window.close()
+        window = wd.main(load_templates())
 
     for e in template_events:
         if event == f"{e}_edit":
@@ -118,21 +114,15 @@ while True:
             pyperclip.copy(file)
 
         elif event == f"{e}_delete":
-            try:
-                delete_template(e)
-            except:
-                pass
-            window.close()
-            window = wd.main(load_templates())
-            
-
-    # for e in select_events:
-    #     if event == f"{e}_select":
-    #         path = f"{templates_path()}/{e}.txt"
-    #         file = open(path, 'r').read()
-    #         pyperclip.copy(file)
-
-    
+            if wd.confirm_delete(e): 
+                try:
+                    delete_template(e)
+                except:
+                    pass
+                window.close()
+                window = wd.main(load_templates())
+            event = None
+                
 
 window.close()
 

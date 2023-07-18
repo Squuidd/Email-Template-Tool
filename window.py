@@ -3,15 +3,25 @@ import json
 
 
 WINDOW_NAME = "Email Template Tool"
-font = ("Arial", 14)
+font = ("Arial", 12)
+
+def sort_templates(names):
+    name_list = []
+    for name in names:
+        name_list.append(name[0])
+
+    name_list.sort(key=lambda v: v.upper())
+
+    return name_list
 
 def main(saved_templates):
-    column_layout = []
+    column_layout = [] #Alphabetize this list
 
+    sorted_names = sort_templates(saved_templates)
     # displays saved templates
-    for i in saved_templates:
-        column_layout.append(template_button(i[0])[0])
-        print(i[0])
+    for i in sorted_names: #saved_templates
+        #column_layout.append(template_button(i[0])[0])
+        column_layout.append(template_button(i)[0])
 
     layout = [
         [
@@ -63,4 +73,34 @@ def template_button(name):
 
     return layout
     
+def confirm_delete(name):
+    layout = [
+        [
+            sg.Text(f"Are you sure want to delete [{name}]?", font=font)
+        ],
+        [
+            sg.Button("Yes", key=f"destroy_{name}", font=font),
+            sg.Button("No", key=f"destroy_cancel", font=font)
+        ]
+    ]
+
     
+    window = sg.Window("", layout)
+
+    while True:
+        event, values = window.read()
+        print(event)
+        if event == f"destroy_{name}":
+            window.close()
+            return True
+
+        elif event == "destroy_cancel":
+            break
+        
+        elif event == sg.WIN_CLOSED:
+            break
+
+    window.close()
+    return False
+        
+        
