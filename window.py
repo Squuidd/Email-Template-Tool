@@ -142,5 +142,8 @@ def error_message(message):
         if event == "error_acknowledge":
             break
 
+        elif event == sg.WIN_CLOSED:
+            break
+
     window.close()
 

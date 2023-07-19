@@ -57,7 +57,7 @@ def name_checker(name):
         data = json.load(f)
     
     for i in data["Templates"]:
-        if i[0] == name:
+        if i[0].lower() == name.lower():
             wd.error_message("This name is already used.")
             return False
         
