@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import json
 
 
+
 WINDOW_NAME = "Email Template Tool"
 font = ("Arial", 12)
 
@@ -19,20 +20,25 @@ def sort_templates(names):
     return name_list
 
 def main(saved_templates):
-    column_layout = [] #Alphabetize this list
+    main_column = [] #Alphabetize this list
+    edit_column = []
 
     sorted_names = sort_templates(saved_templates)
     # displays saved templates
     for i in sorted_names: #saved_templates
-        #column_layout.append(template_button(i[0])[0])
-        column_layout.append(template_button(i)[0])
+        #main_column.append(template_button(i[0])[0])
+        main_column.append(template_button(i)[0])
+        edit_column.append(edit_layout(i)[0])
+
+    
 
     layout = [
         [
             sg.Button("Add Template", key="add_template", font=font)
         ],
         [
-            sg.Column(column_layout, key="new_column") 
+            sg.Column(main_column, key="new_column"),
+            sg.Column(edit_column, key="edit_column")
         ]
     ]
 
@@ -72,11 +78,20 @@ def template_button(name):
     layout = [
         [
             sg.Button(name, key=f"{name}_select", font=font),
-            sg.Button("Edit Template", key=f"{name}_edit", font=font),
-            sg.Button("Delete Template", key=f"{name}_delete", font=font)
+            # sg.Button("Edit Template", key=f"{name}_edit", font=font),
+            # sg.Button("Delete Template", key=f"{name}_delete", font=font)
         ]
     ]
 
+    return layout
+
+def edit_layout(name):
+    layout = [
+        [
+            sg.Button("Edit Template", key=f"{name}_edit", font=font),
+            sg.Button("Delete Template", key=f"{name}_delete", font=font)
+        ]
+    ]    
     return layout
     
 def confirm_delete(name):

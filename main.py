@@ -6,8 +6,6 @@ import pyperclip
 
 
 
-
-
 template_events = []
 config_file = "config.json"
 
@@ -101,7 +99,6 @@ def create_template(name):
     template.create_txt()
 
     
-
 # scan for templates
 
 window = wd.main(load_templates())
@@ -125,11 +122,14 @@ while True:
         if event == f"{e}_edit":
             path = f"{templates_path()}/{e}.txt"
             os.startfile(path)
+            event = None
+            
         
         elif event == f"{e}_select":
             path = f"{templates_path()}/{e}.txt"
             file = open(path, 'r').read()
             pyperclip.copy(file)
+            event = None
 
         elif event == f"{e}_delete":
             if wd.confirm_delete(e): 
